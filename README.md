@@ -9,6 +9,11 @@ Ye raha aapka updated aur perfect README.md:
 
 **Sketch Dialog** (by SketchLib) is a premium, lightweight, and highly customizable UI dialog library for Android. Built with 100% Java, it provides beautiful alert dialogs, popups, and confirmation screens that are incredibly easy to integrate with zero XML layout boilerplate needed!
 
+
+<p align="center">
+  <img src="preview.gif" width="250" alt="Demo GIF"/>
+</p>
+
 ---
 
 ## ✨ Features
