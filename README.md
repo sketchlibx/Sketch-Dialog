@@ -1,6 +1,3 @@
-Ah, samajh gaya! Toh "SketchLib" aapka main brand/app name hai (sketchlib.store), aur yeh specific repository sirf Sketch Dialog ke liye hai.
-Maine aapka README.md puri tarah se update kar diya hai. Isme se ScratchView hata diya hai aur sirf Dialog par focus kiya hai, aur aapka exact dependency link bhi add kar diya hai.
-Ye raha aapka updated aur perfect README.md:
 # Sketch Dialog 💬
 
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
@@ -57,8 +54,22 @@ Set your default theme and animation once in your Application class or main onCr
 // Set defaults for all dialogs
 SketchDialog.setDefaultTheme(SketchDialog.Theme.AUTO);
 SketchDialog.setDefaultAnimation(SketchDialog.Animation.SLIDE_BOTTOM);
+```
+
+2. Standard Alert / Exit Dialog (Two Buttons)
+```java
+new SketchDialog.Builder(this)
+    .setIcon(android.R.drawable.ic_menu_close_clear_cancel)
+    .setTitle("Exit Application?")
+    .setMessage("Are you sure you want to close the app?")
+    .setPrimaryColor(Color.parseColor("#582C8E")) // Custom Primary Color
+    .setPositiveButton("Yes, Exit", v -> finishAffinity())
+    .setNegativeButton("Cancel", null) // Pass null to simply dismiss
+    .show();
+```
 
 3. Standard Alert / Exit Dialog (Two Buttons)
+```java
 new SketchDialog.Builder(this)
     .setIcon(android.R.drawable.ic_menu_close_clear_cancel)
     .setTitle("Exit Application?")
@@ -67,9 +78,11 @@ new SketchDialog.Builder(this)
     .setPositiveButton("Yes, Exit", v -> finishAffinity())
     .setNegativeButton("Cancel", null) // Pass null to simply dismiss
     .show();
+```
 
 4. Update / Success Dialog (Single Button)
 When you provide only one button, Sketch Dialog intelligently makes it full-width (MATCH_PARENT).
+```java
 new SketchDialog.Builder(this)
     .setIcon(android.R.drawable.ic_popup_sync)
     .setTitle("Update Required!")
@@ -78,9 +91,12 @@ new SketchDialog.Builder(this)
     .setPrimaryColor(Color.parseColor("#2196F3")) 
     .setPositiveButton("Update Now", v -> openPlayStore())
     .show();
+```
 
 5. Forced Dark Mode & Custom Animation Override
 You can easily override global settings for a specific dialog.
+
+```java
 new SketchDialog.Builder(this)
     .setTheme(SketchDialog.Theme.DARK) // Forces Dark Mode regardless of system settings
     .setAnimation(SketchDialog.Animation.ZOOM) // Overrides global animation
@@ -89,8 +105,9 @@ new SketchDialog.Builder(this)
     .setMessage("Please check your internet connection and try again.")
     .setPrimaryColor(Color.parseColor("#E53935")) 
     .setPositiveButton("Retry", v -> retryConnection())
-    .show(); 
+    .show();
 ```
+
 🤝 Contribution
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 📄 License
