@@ -5,7 +5,7 @@ Ye raha aapka updated aur perfect README.md:
 
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Website](https://img.shields.io/badge/Website-sketchlib.store-purple.svg)](https://sketchlib.fun)
+[![](https://jitpack.io/v/sketchlibx/Sketch-Dialog.svg)](https://jitpack.io/#sketchlibx/Sketch-Dialog)
 
 **Sketch Dialog** (by SketchLib) is a premium, lightweight, and highly customizable UI dialog library for Android. Built with 100% Java, it provides beautiful alert dialogs, popups, and confirmation screens that are incredibly easy to integrate with zero XML layout boilerplate needed!
 
