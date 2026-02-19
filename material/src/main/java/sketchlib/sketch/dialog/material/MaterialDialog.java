@@ -2,6 +2,7 @@ package sketchlib.sketch.dialog.material;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -33,6 +34,8 @@ public class MaterialDialog extends Dialog {
 	
 	private static Theme defaultTheme = Theme.AUTO;
 	private static Animation defaultAnimation = Animation.ZOOM;
+	private static Integer defaultBackgroundColor = null;
+	private static Integer defaultPrimaryColor = null;
 	
 	private LinearProgressIndicator mLinearProgress;
 	private CircularProgressIndicator mCircularProgress;
@@ -40,6 +43,8 @@ public class MaterialDialog extends Dialog {
 	
 	public static void setDefaultTheme(Theme theme) { defaultTheme = theme; }
 	public static void setDefaultAnimation(Animation animation) { defaultAnimation = animation; }
+	public static void setDefaultBackgroundColor(int color) { defaultBackgroundColor = color; }
+	public static void setDefaultPrimaryColor(int color) { defaultPrimaryColor = color; }
 	
 	private MaterialDialog(Context context) {
 		super(context);
@@ -69,7 +74,8 @@ public class MaterialDialog extends Dialog {
 		
 		private Theme theme = defaultTheme;
 		private Animation animation = defaultAnimation;
-		private int primaryColor = Color.parseColor("#6750A4");
+		private Integer primaryColor = null;
+		private Integer backgroundColor = null;
 		private Integer iconTintColor = null;
 		
 		private View.OnClickListener positiveListener;
@@ -91,6 +97,7 @@ public class MaterialDialog extends Dialog {
 		public Builder setIconTint(int color) { this.iconTintColor = color; return this; }
 		public Builder setCancelable(boolean cancelable) { this.cancelable = cancelable; return this; }
 		public Builder setPrimaryColor(int color) { this.primaryColor = color; return this; }
+		public Builder setBackgroundColor(int color) { this.backgroundColor = color; return this; }
 		public Builder setTheme(Theme theme) { this.theme = theme; return this; }
 		public Builder setAnimation(Animation animation) { this.animation = animation; return this; }
 		
@@ -122,10 +129,27 @@ public class MaterialDialog extends Dialog {
 				isDark = (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
 			}
 			
-			int bgColor = isDark ? Color.parseColor("#2B2930") : Color.parseColor("#F3EDF7");
+			int finalPrimaryColor;
+			if (primaryColor != null) {
+				finalPrimaryColor = primaryColor;
+			} else if (defaultPrimaryColor != null) {
+				finalPrimaryColor = defaultPrimaryColor;
+			} else {
+				finalPrimaryColor = Color.parseColor("#6750A4");
+			}
+			
+			int finalBgColor;
+			if (backgroundColor != null) {
+				finalBgColor = backgroundColor;
+			} else if (defaultBackgroundColor != null) {
+				finalBgColor = defaultBackgroundColor;
+			} else {
+				finalBgColor = isDark ? Color.parseColor("#2B2930") : Color.parseColor("#F3EDF7");
+			}
+			
 			int titleColor = isDark ? Color.parseColor("#E6E0E9") : Color.parseColor("#1D1B20");
 			int msgColor = isDark ? Color.parseColor("#CAC4D0") : Color.parseColor("#49454F");
-			int trackColor = Color.argb(40, Color.red(primaryColor), Color.green(primaryColor), Color.blue(primaryColor));
+			int trackColor = Color.argb(40, Color.red(finalPrimaryColor), Color.green(finalPrimaryColor), Color.blue(finalPrimaryColor));
 			int btnNegPressedBg = isDark ? Color.parseColor("#1FFFFFFF") : Color.parseColor("#1F000000");
 			
 			LinearLayout rootLayout = new LinearLayout(context);
@@ -135,7 +159,7 @@ public class MaterialDialog extends Dialog {
 			rootLayout.setPadding(padding, padding, padding, padding);
 			
 			GradientDrawable bgDrawable = new GradientDrawable();
-			bgDrawable.setColor(bgColor);
+			bgDrawable.setColor(finalBgColor);
 			bgDrawable.setCornerRadius(dpToPx(context, 28));
 			rootLayout.setBackground(bgDrawable);
 			
@@ -147,7 +171,7 @@ public class MaterialDialog extends Dialog {
 				LinearProgressIndicator progressBar = new LinearProgressIndicator(themeContext);
 				progressBar.setMax(100);
 				progressBar.setProgressCompat(0, false);
-				progressBar.setIndicatorColor(primaryColor);
+				progressBar.setIndicatorColor(finalPrimaryColor);
 				progressBar.setTrackColor(trackColor);
 				progressBar.setTrackCornerRadius(dpToPx(context, 4));
 				
@@ -180,7 +204,7 @@ public class MaterialDialog extends Dialog {
 				CircularProgressIndicator circularView = new CircularProgressIndicator(themeContext);
 				circularView.setMax(100);
 				circularView.setProgressCompat(0, false);
-				circularView.setIndicatorColor(primaryColor);
+				circularView.setIndicatorColor(finalPrimaryColor);
 				circularView.setTrackColor(trackColor);
 				circularView.setIndicatorSize(dpToPx(context, 64));
 				circularView.setTrackThickness(dpToPx(context, 4));
@@ -209,7 +233,7 @@ public class MaterialDialog extends Dialog {
 				
 				CircularProgressIndicator spinner = new CircularProgressIndicator(themeContext);
 				spinner.setIndeterminate(true);
-				spinner.setIndicatorColor(primaryColor);
+				spinner.setIndicatorColor(finalPrimaryColor);
 				spinner.setIndicatorSize(dpToPx(context, 48));
 				spinner.setTrackThickness(dpToPx(context, 4));
 				
@@ -219,7 +243,7 @@ public class MaterialDialog extends Dialog {
 			} else if (iconResId != -1) {
 				ImageView iconView = new ImageView(context);
 				iconView.setImageResource(iconResId);
-				int tint = iconTintColor != null ? iconTintColor : primaryColor;
+				int tint = iconTintColor != null ? iconTintColor : finalPrimaryColor;
 				iconView.setColorFilter(tint, PorterDuff.Mode.SRC_IN);
 				LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dpToPx(context, 24), dpToPx(context, 24));
 				iconParams.bottomMargin = dpToPx(context, 16);
@@ -259,7 +283,7 @@ public class MaterialDialog extends Dialog {
 				boolean isSingleButton = (positiveText == null || negativeText == null);
 				
 				if (negativeText != null) {
-					TextView negBtn = createM3Button(context, negativeText, Color.TRANSPARENT, btnNegPressedBg, primaryColor);
+					TextView negBtn = createM3Button(context, negativeText, Color.TRANSPARENT, btnNegPressedBg, finalPrimaryColor);
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					isSingleButton ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.WRAP_CONTENT, 
 					dpToPx(context, 40));
@@ -272,7 +296,7 @@ public class MaterialDialog extends Dialog {
 				}
 				
 				if (positiveText != null) {
-					TextView posBtn = createM3Button(context, positiveText, primaryColor, manipulateColor(primaryColor, 0.8f), Color.WHITE);
+					TextView posBtn = createM3Button(context, positiveText, finalPrimaryColor, manipulateColor(finalPrimaryColor, 0.8f), Color.WHITE);
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					isSingleButton ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.WRAP_CONTENT, 
 					dpToPx(context, 40));

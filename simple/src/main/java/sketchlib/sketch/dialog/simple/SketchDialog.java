@@ -36,6 +36,8 @@ public class SketchDialog extends Dialog {
 
     private static Theme defaultTheme = Theme.AUTO;
     private static Animation defaultAnimation = Animation.ZOOM;
+    private static Integer defaultBackgroundColor = null;
+    private static Integer defaultPrimaryColor = null;
 
     private ProgressBar mProgressBar;
     private TextView mProgressText;
@@ -43,6 +45,8 @@ public class SketchDialog extends Dialog {
 
     public static void setDefaultTheme(Theme theme) { defaultTheme = theme; }
     public static void setDefaultAnimation(Animation animation) { defaultAnimation = animation; }
+    public static void setDefaultBackgroundColor(int color) { defaultBackgroundColor = color; }
+    public static void setDefaultPrimaryColor(int color) { defaultPrimaryColor = color; }
 
     private SketchDialog(Context context) {
         super(context);
@@ -72,7 +76,8 @@ public class SketchDialog extends Dialog {
 
         private Theme theme = defaultTheme;
         private Animation animation = defaultAnimation;
-        private int primaryColor = Color.parseColor("#582C8E");
+        private Integer primaryColor = null;
+        private Integer backgroundColor = null;
         private Integer iconTintColor = null;
 
         private View.OnClickListener positiveListener;
@@ -94,6 +99,7 @@ public class SketchDialog extends Dialog {
         public Builder setIconTint(int color) { this.iconTintColor = color; return this; }
         public Builder setCancelable(boolean cancelable) { this.cancelable = cancelable; return this; }
         public Builder setPrimaryColor(int color) { this.primaryColor = color; return this; }
+        public Builder setBackgroundColor(int color) { this.backgroundColor = color; return this; }
         public Builder setTheme(Theme theme) { this.theme = theme; return this; }
         public Builder setAnimation(Animation animation) { this.animation = animation; return this; }
 
@@ -125,7 +131,26 @@ public class SketchDialog extends Dialog {
                 isDark = (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
             }
 
-            int bgColor = isDark ? Color.parseColor("#1C1C22") : Color.parseColor("#FFFFFF");
+            // Determine Primary Color
+            int finalPrimaryColor;
+            if (primaryColor != null) {
+                finalPrimaryColor = primaryColor;
+            } else if (defaultPrimaryColor != null) {
+                finalPrimaryColor = defaultPrimaryColor;
+            } else {
+                finalPrimaryColor = Color.parseColor("#582C8E");
+            }
+
+            // Determine Background Color
+            int finalBgColor;
+            if (backgroundColor != null) {
+                finalBgColor = backgroundColor;
+            } else if (defaultBackgroundColor != null) {
+                finalBgColor = defaultBackgroundColor;
+            } else {
+                finalBgColor = isDark ? Color.parseColor("#1C1C22") : Color.parseColor("#FFFFFF");
+            }
+
             int titleColor = isDark ? Color.parseColor("#FFFFFF") : Color.parseColor("#1A1A1A");
             int msgColor = isDark ? Color.parseColor("#A0A0A5") : Color.parseColor("#666666");
             int btnNegBg = isDark ? Color.parseColor("#2C2C35") : Color.parseColor("#F0F0F0");
@@ -138,7 +163,7 @@ public class SketchDialog extends Dialog {
             rootLayout.setPadding(padding, padding, padding, padding);
 
             GradientDrawable bgDrawable = new GradientDrawable();
-            bgDrawable.setColor(bgColor);
+            bgDrawable.setColor(finalBgColor);
             bgDrawable.setCornerRadius(dpToPx(context, 16));
             rootLayout.setBackground(bgDrawable);
 
@@ -147,9 +172,9 @@ public class SketchDialog extends Dialog {
                 progressBar.setMax(100);
                 progressBar.setProgress(0);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    progressBar.setProgressTintList(ColorStateList.valueOf(primaryColor));
+                    progressBar.setProgressTintList(ColorStateList.valueOf(finalPrimaryColor));
                 } else {
-                    progressBar.getProgressDrawable().setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN);
+                    progressBar.getProgressDrawable().setColorFilter(finalPrimaryColor, PorterDuff.Mode.SRC_IN);
                 }
                 LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dpToPx(context, 8));
                 progressParams.bottomMargin = dpToPx(context, 4);
@@ -173,7 +198,7 @@ public class SketchDialog extends Dialog {
                 frameParams.bottomMargin = dpToPx(context, 16);
                 rootLayout.addView(frameLayout, frameParams);
 
-                CircularProgressView circularView = new CircularProgressView(context, primaryColor);
+                CircularProgressView circularView = new CircularProgressView(context, finalPrimaryColor);
                 frameLayout.addView(circularView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
                 TextView progressText = new TextView(context);
@@ -192,9 +217,9 @@ public class SketchDialog extends Dialog {
             } else if (progressStyle == ProgressStyle.SPINNER) {
                 ProgressBar progressBar = new ProgressBar(context);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    progressBar.setIndeterminateTintList(ColorStateList.valueOf(primaryColor));
+                    progressBar.setIndeterminateTintList(ColorStateList.valueOf(finalPrimaryColor));
                 } else {
-                    progressBar.getIndeterminateDrawable().setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN);
+                    progressBar.getIndeterminateDrawable().setColorFilter(finalPrimaryColor, PorterDuff.Mode.SRC_IN);
                 }
                 LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(dpToPx(context, 48), dpToPx(context, 48));
                 progressParams.bottomMargin = dpToPx(context, 16);
@@ -242,7 +267,7 @@ public class SketchDialog extends Dialog {
                 boolean isSingleButton = (positiveText == null || negativeText == null);
 
                 if (negativeText != null) {
-                    TextView negBtn = createButton(context, negativeText, btnNegBg, btnNegText);
+                    TextView negBtn = createButton(context, negativeText, btnNegBg, btnNegText, finalPrimaryColor);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             isSingleButton ? ViewGroup.LayoutParams.MATCH_PARENT : 0, 
                             dpToPx(context, 48), 
@@ -256,7 +281,7 @@ public class SketchDialog extends Dialog {
                 }
 
                 if (positiveText != null) {
-                    TextView posBtn = createButton(context, positiveText, primaryColor, Color.WHITE);
+                    TextView posBtn = createButton(context, positiveText, finalPrimaryColor, Color.WHITE, finalPrimaryColor);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             isSingleButton ? ViewGroup.LayoutParams.MATCH_PARENT : 0, 
                             dpToPx(context, 48), 
@@ -304,7 +329,7 @@ public class SketchDialog extends Dialog {
             return dialog;
         }
 
-        private TextView createButton(Context context, String text, int bgColor, int textColor) {
+        private TextView createButton(Context context, String text, int bgColor, int textColor, int primaryColor) {
             TextView button = new TextView(context);
             button.setText(text);
             button.setTextColor(textColor);
