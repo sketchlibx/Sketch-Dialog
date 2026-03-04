@@ -38,6 +38,7 @@ public class SketchDialog extends Dialog {
     private static Animation defaultAnimation = Animation.ZOOM;
     private static Integer defaultBackgroundColor = null;
     private static Integer defaultPrimaryColor = null;
+    private static boolean defaultGlassyMode = false;
 
     private ProgressBar mProgressBar;
     private TextView mProgressText;
@@ -47,6 +48,7 @@ public class SketchDialog extends Dialog {
     public static void setDefaultAnimation(Animation animation) { defaultAnimation = animation; }
     public static void setDefaultBackgroundColor(int color) { defaultBackgroundColor = color; }
     public static void setDefaultPrimaryColor(int color) { defaultPrimaryColor = color; }
+    public static void setDefaultGlassyMode(boolean enable) { defaultGlassyMode = enable; }
 
     private SketchDialog(Context context) {
         super(context);
@@ -79,6 +81,7 @@ public class SketchDialog extends Dialog {
         private Integer primaryColor = null;
         private Integer backgroundColor = null;
         private Integer iconTintColor = null;
+        private boolean glassyMode = defaultGlassyMode;
 
         private View.OnClickListener positiveListener;
         private View.OnClickListener negativeListener;
@@ -102,6 +105,7 @@ public class SketchDialog extends Dialog {
         public Builder setBackgroundColor(int color) { this.backgroundColor = color; return this; }
         public Builder setTheme(Theme theme) { this.theme = theme; return this; }
         public Builder setAnimation(Animation animation) { this.animation = animation; return this; }
+        public Builder setGlassyMode(boolean enable) { this.glassyMode = enable; return this; }
 
         public Builder setLoading(boolean isLoading) {
             if (isLoading) this.progressStyle = ProgressStyle.SPINNER;
@@ -121,6 +125,10 @@ public class SketchDialog extends Dialog {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                if (glassyMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    dialog.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                    dialog.getWindow().getAttributes().setBlurBehindRadius(40);
+                }
             }
             dialog.setCancelable(cancelable);
 
@@ -131,7 +139,6 @@ public class SketchDialog extends Dialog {
                 isDark = (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
             }
 
-            // Determine Primary Color
             int finalPrimaryColor;
             if (primaryColor != null) {
                 finalPrimaryColor = primaryColor;
@@ -141,7 +148,6 @@ public class SketchDialog extends Dialog {
                 finalPrimaryColor = Color.parseColor("#582C8E");
             }
 
-            // Determine Background Color
             int finalBgColor;
             if (backgroundColor != null) {
                 finalBgColor = backgroundColor;
@@ -163,7 +169,14 @@ public class SketchDialog extends Dialog {
             rootLayout.setPadding(padding, padding, padding, padding);
 
             GradientDrawable bgDrawable = new GradientDrawable();
-            bgDrawable.setColor(finalBgColor);
+            if (glassyMode) {
+                int alphaBg = Color.argb(isDark ? 160 : 190, Color.red(finalBgColor), Color.green(finalBgColor), Color.blue(finalBgColor));
+                bgDrawable.setColor(alphaBg);
+                int strokeColor = isDark ? Color.argb(30, 255, 255, 255) : Color.argb(80, 255, 255, 255);
+                bgDrawable.setStroke(dpToPx(context, 1), strokeColor);
+            } else {
+                bgDrawable.setColor(finalBgColor);
+            }
             bgDrawable.setCornerRadius(dpToPx(context, 16));
             rootLayout.setBackground(bgDrawable);
 
