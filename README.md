@@ -1,11 +1,12 @@
 Sketch Dialog 💬
-
 Sketch Dialog (by SketchLib) is a premium, lightweight, and highly customizable UI dialog library for Android. Built with 100% Java, it provides beautiful alert dialogs, popups, progress dialogs, and confirmation screens that are incredibly easy to integrate with zero XML layout boilerplate needed!
 Now featuring a Multi-Module architecture, you can choose between our Simple design or the new Material Design 3 (M3), along with a stunning new Glassmorphism effect!
 <p align="center">
 <img src="preview.gif" width="250" alt="Demo GIF"/>
 </p>
+
 ✨ Features
+
  * 🎨 Two Design Languages: Choose between simple and material modules based on your app's UI.
  * 🪞 Glassmorphism (Blur Effect): Premium semi-transparent glassy look with true background blur (Android 12+).
  * 🌓 Smart Theming: Fully supports Auto, Light, and Dark themes.
