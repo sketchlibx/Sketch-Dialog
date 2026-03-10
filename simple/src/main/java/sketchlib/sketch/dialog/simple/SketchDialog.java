@@ -338,7 +338,17 @@ public class SketchDialog extends Dialog {
 
         public SketchDialog show() {
             SketchDialog dialog = build();
-            dialog.show();
+            try {
+                if (context instanceof android.app.Activity) {
+                    android.app.Activity activity = (android.app.Activity) context;
+                    if (activity.isFinishing() || activity.isDestroyed()) {
+                        return dialog;
+                    }
+                }
+                dialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return dialog;
         }
 

@@ -354,7 +354,17 @@ public class MaterialDialog extends Dialog {
 		
 		public MaterialDialog show() {
 			MaterialDialog dialog = build();
-			dialog.show();
+			try {
+				if (context instanceof android.app.Activity) {
+					android.app.Activity activity = (android.app.Activity) context;
+					if (activity.isFinishing() || activity.isDestroyed()) {
+						return dialog;
+					}
+				}
+				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return dialog;
 		}
 		
