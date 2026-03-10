@@ -1,22 +1,22 @@
-Sketch Dialog ðŸ’¬
+Sketch Dialog 💬
 Sketch Dialog (by SketchLib) is a premium, lightweight, and highly customizable UI dialog library for Android. Built with 100% Java, it provides beautiful alert dialogs, popups, progress dialogs, and confirmation screens that are incredibly easy to integrate with zero XML layout boilerplate needed!
 Now featuring a Multi-Module architecture, you can choose between our Simple design or the new Material Design 3 (M3), along with a stunning new Glassmorphism effect!
 <p align="center">
 <img src="preview.gif" width="250" alt="Demo GIF"/>
 </p>
 
-âœ¨ Features
+✨ Features
 
- * ðŸŽ¨ Two Design Languages: Choose between simple and material modules based on your app's UI.
- * ðŸªž Glassmorphism (Blur Effect): Premium semi-transparent glassy look with true background blur (Android 12+).
- * ðŸŒ“ Smart Theming: Fully supports Auto, Light, and Dark themes.
- * ðŸŒˆ Full Color Control: Customize Background, Primary, and Icon colors globally or per dialog.
- * ðŸŽ¬ Built-in Animations: Smooth entry animations including Zoom, Fade, and Slide Bottom.
- * â³ Progress Indicators: Built-in support for Spinners, Horizontal, and Circular progress bars (with M3 Wavy styles).
- * ðŸ“ Adaptive Layouts: Automatically expands to MATCH_PARENT if only a single button is provided.
- * ðŸ–¼ï¸ Icon Support: Easily attach native Android system icons with custom tinting.
- * âš¡ 100% Java/Kotlin: No need to mess with complex XML layout files.
-ðŸ“¦ Installation
+ * 🎨 Two Design Languages: Choose between simple and material modules based on your app's UI.
+ * 🪞 Glassmorphism (Blur Effect): Premium semi-transparent glassy look with true background blur (Android 12+).
+ * 🌓 Smart Theming: Fully supports Auto, Light, and Dark themes.
+ * 🌈 Full Color Control: Customize Background, Primary, and Icon colors globally or per dialog.
+ * 🎬 Built-in Animations: Smooth entry animations including Zoom, Fade, and Slide Bottom.
+ * ⏳ Progress Indicators: Built-in support for Spinners, Horizontal, and Circular progress bars (with M3 Wavy styles).
+ * 📏 Adaptive Layouts: Automatically expands to MATCH_PARENT if only a single button is provided.
+ * 🖼️ Icon Support: Easily attach native Android system icons with custom tinting.
+ * ⚡ 100% Java/Kotlin: No need to mess with complex XML layout files.
+📦 Installation
 Step 1: Add the JitPack repository to your root build.gradle (or settings.gradle):
 
 ```gradle
@@ -41,8 +41,8 @@ dependencies {
 }
 ```
 
-ðŸš€ Usage
-> ðŸ’¡ Note: Both MaterialDialog and SketchDialog share the exact same Builder API! Simply swap the class name based on the design you want.
+🚀 Usage
+> 💡 Note: Both MaterialDialog and SketchDialog share the exact same Builder API! Simply swap the class name based on the design you want.
 > 
 1. Global Configuration (Optional but Recommended)
 Set your default theme, animation, colors, and glassy mode once in your Application class or main onCreate(). This applies to all dialogs unless overridden.
@@ -126,7 +126,7 @@ new MaterialDialog.Builder(this)
     .show();
 ```
 
-ðŸ¤ Contribution
+🤝 Contribution
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-ðŸ“„ License
+📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
