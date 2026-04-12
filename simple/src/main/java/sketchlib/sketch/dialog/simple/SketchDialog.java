@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class SketchDialog extends Dialog {
@@ -83,6 +84,9 @@ public class SketchDialog extends Dialog {
         private Integer iconTintColor = null;
         private boolean glassyMode = defaultGlassyMode;
 
+        private View customView;
+        private boolean wrapInScrollView;
+
         private View.OnClickListener positiveListener;
         private View.OnClickListener negativeListener;
 
@@ -106,6 +110,12 @@ public class SketchDialog extends Dialog {
         public Builder setTheme(Theme theme) { this.theme = theme; return this; }
         public Builder setAnimation(Animation animation) { this.animation = animation; return this; }
         public Builder setGlassyMode(boolean enable) { this.glassyMode = enable; return this; }
+
+        public Builder customView(View view, boolean wrapInScrollView) {
+            this.customView = view;
+            this.wrapInScrollView = wrapInScrollView;
+            return this;
+        }
 
         public Builder setLoading(boolean isLoading) {
             if (isLoading) this.progressStyle = ProgressStyle.SPINNER;
@@ -268,6 +278,22 @@ public class SketchDialog extends Dialog {
                 LinearLayout.LayoutParams msgParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 msgParams.topMargin = dpToPx(context, 8);
                 rootLayout.addView(msgView, msgParams);
+            }
+
+            if (customView != null) {
+                if (customView.getParent() != null) {
+                    ((ViewGroup) customView.getParent()).removeView(customView);
+                }
+                LinearLayout.LayoutParams customParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                customParams.topMargin = dpToPx(context, 16);
+
+                if (wrapInScrollView) {
+                    ScrollView scrollView = new ScrollView(context);
+                    scrollView.addView(customView);
+                    rootLayout.addView(scrollView, customParams);
+                } else {
+                    rootLayout.addView(customView, customParams);
+                }
             }
 
             if (positiveText != null || negativeText != null) {
